@@ -1,64 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="600.0" prefWidth="1000.0"
-      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.cloud.storage.client.gui.Controller">
-   <children>
-      <Pane prefHeight="600.0" prefWidth="500.0">
-         <children>
-            <BorderPane prefHeight="600.0" prefWidth="500.0" style="-fx-border-color: #ABB2B9;">
-               <bottom>
-                  <HBox prefHeight="25.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="btnSendLocal" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Send" />
-                        <Button fx:id="btnDeleteLocal" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Delete" />
-                        <Button fx:id="btnRefreshLocal" mnemonicParsing="false" onAction="#refreshLocal" prefWidth="166.0" text="Refresh" />
-                     </children>
-                  </HBox>
-               </bottom>
-               <top>
-                  <Label text="Local Storage" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-               </top>
-               <center>
-                  <ListView fx:id="listViewLocal" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-         </children>
-      </Pane>
-      <Pane prefHeight="600.0" prefWidth="500.0">
-         <children>
-            <BorderPane prefHeight="600.0" prefWidth="500.0" style="-fx-border-color: #ABB2B9;">
-               <bottom>
-                  <HBox prefHeight="25.0" prefWidth="500.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Button fx:id="btnDownloadCloud" mnemonicParsing="false" prefWidth="166.0" text="Download" />
-                        <Button fx:id="btnDeleteCloud" mnemonicParsing="false" prefWidth="166.0" text="Delete" />
-                        <Button fx:id="btnRefreshCloud" mnemonicParsing="false" prefWidth="166.0" text="Refresh" />
-                     </children>
-                  </HBox>
-               </bottom>
-               <top>
-                  <Label text="Cloud Storage" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-               </top>
-               <center>
-                  <ListView fx:id="listViewCloud" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-         </children>
-      </Pane>
-   </children>
-</HBox>
+<BorderPane maxHeight="600.0" maxWidth="1000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloud.storage.client.gui.Controller">
+    <top>
+        <Pane fx:id="topPanel" prefHeight="75.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <children>
+                <AnchorPane prefHeight="75.0" prefWidth="1000.0">
+                    <children>
+                        <Button fx:id="btnSignIn" layoutX="869.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Sign In">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Button>
+                        <PasswordField fx:id="password" layoutX="683.0" layoutY="19.0" promptText="password">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </PasswordField>
+                        <TextField fx:id="username" layoutX="495.0" layoutY="19.0" promptText="username">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <ImageView fitHeight="74.0" fitWidth="129.0" layoutX="36.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@logo.png" />
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+            </children>
+        </Pane>
+    </top>
+    <center>
+        <Pane fx:id="mainPanel" maxHeight="600.0" maxWidth="1000.0" prefHeight="525.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox prefHeight="525.0" prefWidth="1000.0">
+                    <children>
+                        <Pane prefHeight="525.0" prefWidth="500.0" style="-fx-border-color: #ABB2B9;">
+                            <children>
+                                <BorderPane prefHeight="525.0" prefWidth="500.0">
+                                    <top>
+                                        <Label text="Local Storage" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="25.0" />
+                                            </font>
+                                        </Label>
+                                    </top>
+                                    <center>
+                                        <ListView fx:id="listViewLocal" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #ABB2B9;" BorderPane.alignment="CENTER" />
+                                    </center>
+                                    <bottom>
+                                        <HBox prefHeight="25.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+                                            <children>
+                                                <Button fx:id="btnSendLocal" mnemonicParsing="false" prefWidth="166.0" text="Send" />
+                                                <Button fx:id="btnDeleteLocal" mnemonicParsing="false" prefWidth="166.0" text="Delete" />
+                                                <Button fx:id="btnRefreshLocal" mnemonicParsing="false" onAction="#refreshLocal" prefWidth="166.0" text="Refresh" />
+                                            </children>
+                                        </HBox>
+                                    </bottom>
+                                </BorderPane>
+                            </children>
+                        </Pane>
+                        <Pane prefHeight="525.0" prefWidth="500.0" style="-fx-border-color: #ABB2B9;">
+                            <children>
+                                <BorderPane prefHeight="525.0" prefWidth="500.0">
+                                    <top>
+                                        <Label text="Cloud Storage" BorderPane.alignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="25.0" />
+                                            </font>
+                                        </Label>
+                                    </top>
+                                    <center>
+                                        <ListView fx:id="listViewCloud" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                                    </center>
+                                    <bottom>
+                                        <HBox prefHeight="25.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+                                            <children>
+                                                <Button fx:id="btnDownloadCloud" mnemonicParsing="false" prefWidth="166.0" text="Download" />
+                                                <Button fx:id="btnDeleteCloud" mnemonicParsing="false" prefWidth="166.0" text="Delete" />
+                                                <Button fx:id="btnRefreshCloud" mnemonicParsing="false" prefWidth="166.0" text="Refresh" />
+                                            </children>
+                                        </HBox>
+                                    </bottom>
+                                </BorderPane>
+                            </children>
+                        </Pane>
+                    </children>
+                </HBox>
+            </children>
+        </Pane>
+    </center>
+</BorderPane>
