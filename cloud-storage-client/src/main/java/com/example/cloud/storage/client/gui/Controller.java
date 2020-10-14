@@ -3,6 +3,7 @@ package com.example.cloud.storage.client.gui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
@@ -10,10 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ResourceBundle;
 
-public class Controller {
+public class Controller implements Initializable {
 
     @FXML
     private Pane topPanel;
@@ -54,7 +57,7 @@ public class Controller {
     @FXML
     private Button btnRefreshCloud;
 
-    private ObservableList listLocal;
+    private ObservableList listLocal = FXCollections.observableArrayList();;
 
     private ObservableList listCloud = FXCollections.observableArrayList();
 
@@ -64,7 +67,7 @@ public class Controller {
         if (!Files.exists(localDir)) {
             return;
         }
-        listLocal = FXCollections.observableArrayList();
+        listLocal.clear();
         Files.walkFileTree(localDir, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -73,7 +76,15 @@ public class Controller {
             }
         });
         listViewLocal.setItems(listLocal);
-        topPanel.setVisible(false);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        try {
+            refreshLocal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

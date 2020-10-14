@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="600.0" maxWidth="1000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloud.storage.client.gui.Controller">
+<BorderPane maxHeight="600.0" maxWidth="1000.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloud.storage.client.gui.Controller">
     <top>
         <Pane fx:id="topPanel" prefHeight="75.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
             <children>
@@ -37,7 +45,7 @@
         </Pane>
     </top>
     <center>
-        <Pane fx:id="mainPanel" maxHeight="600.0" maxWidth="1000.0" prefHeight="525.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+        <Pane fx:id="mainPanel" maxHeight="600.0" maxWidth="1000.0" prefWidth="1000.0" snapToPixel="false" BorderPane.alignment="CENTER">
             <children>
                 <HBox prefHeight="525.0" prefWidth="1000.0">
                     <children>
