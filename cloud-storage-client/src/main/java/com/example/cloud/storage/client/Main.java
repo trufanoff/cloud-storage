@@ -1,4 +1,4 @@
-package com.example.cloud.storage.client.gui;
+package com.example.cloud.storage.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

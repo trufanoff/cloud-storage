@@ -1,88 +1,69 @@
 package com.examle.cloud.storage.server;
 
-import io.netty.buffer.ByteBuf;
+import com.example.cloud.storage.common.DeleteFileMessage;
+import com.example.cloud.storage.common.DownloadFileMessage;
+import com.example.cloud.storage.common.FileMessage;
+import com.example.cloud.storage.common.FilesRequest;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
-    public enum State {
-        IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE
-    }
 
-    private int nextLength;
-    private long fileLength;
-    //    private long receivedFileLength;
-    private State currentState = State.IDLE;
-    private Path filePath;
+    public static final String CLOUD_STORAGE = "cloud-storage-server/cloud-storage";
+    private Path path;
+    private Set<String> filesList;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf) msg;
+        if(msg instanceof FileMessage){
+            FileMessage fileMessage = (FileMessage)msg;
+            path = Paths.get(CLOUD_STORAGE,fileMessage.getFileName());
+            Files.createFile(path);
+            Files.write(path,fileMessage.getData());
+        }
 
-        while (buf.readableBytes() > 0) {
-            System.out.println("buf count: "+buf.readableBytes());
-            if (currentState == State.IDLE) {
-                byte readed = buf.readByte();
-                System.out.println("Signal byte: "+readed);
-                if (readed == (byte) 25) {
-                    currentState = State.NAME_LENGTH;
-                    System.out.println("STATE: IDLE");
-                } else {
-                    System.out.println("ERROR: Invalid first byte - " + readed);
-                }
-            }
-            System.out.println("buf count: "+buf.readableBytes());
-            if (currentState == State.NAME_LENGTH) {
-                if (buf.readableBytes() >= 4) {
-                    System.out.println("STATE: NAME LENGTH");
-                    nextLength = buf.readInt();
-                    currentState = State.NAME;
-                }
-            }
-            System.out.println("buf count: "+buf.readableBytes());
-            if (currentState == State.NAME) {
-                if (buf.readableBytes() >= nextLength) {
-                    byte[] fileName = new byte[nextLength];
-                    buf.readBytes(fileName);
-                    filePath = Paths.get("cloud-storage-server", "cloud-storage", new String(fileName));
-                    System.out.println("STATE: NAME - " + new String(fileName, "UTF-8"));
-                    Files.createFile(filePath);
-                    currentState = State.FILE_LENGTH;
-                }
-            }
-            System.out.println("buf count: "+buf.readableBytes());
-            if (currentState == State.FILE_LENGTH) {
-                if (buf.readableBytes() >= 8) {
-                    fileLength = buf.readLong();
-                    System.out.println("STATE: FILE LENGTH - " + fileLength);
-                    currentState = State.FILE;
-                }
-            }
-            System.out.println("buf count: "+buf.readableBytes());
-            if (currentState == State.FILE) {
-                while (buf.readableBytes() > 0) {
-                    byte[] data = new byte[(int) fileLength];
-                    buf.readBytes(data);
-                    Files.write(filePath, data);
-                }
-                currentState = State.IDLE;
-            }
+        if(msg instanceof FilesRequest){
+            FilesRequest filesRequest = new FilesRequest();
+            filesRequest.setFilesList(getFiles());
+            ctx.writeAndFlush(filesRequest);
         }
-        if(buf.readableBytes()==0){
-            System.out.println("release\n");
-            buf.clear();
-            buf.release();
+
+        if(msg instanceof DeleteFileMessage){
+            DeleteFileMessage file = (DeleteFileMessage) msg;
+            Files.delete(Paths.get(CLOUD_STORAGE,file.getFileName()));
         }
+
+        if(msg instanceof DownloadFileMessage){
+            DownloadFileMessage file = (DownloadFileMessage) msg;
+            FileMessage fileMessage = new FileMessage(Paths.get(CLOUD_STORAGE, file.getFileName()));
+            ctx.writeAndFlush(fileMessage);
+        }
+
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
+
+    }
+
+    public Set<String> getFiles() throws IOException {
+        filesList = new HashSet<>();
+        Files.walkFileTree(Paths.get(CLOUD_STORAGE), new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                filesList.add(file.getFileName().toString());
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return filesList;
     }
 }
