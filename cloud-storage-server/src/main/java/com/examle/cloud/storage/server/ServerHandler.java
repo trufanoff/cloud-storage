@@ -1,7 +1,7 @@
 package com.examle.cloud.storage.server;
 
-import com.example.cloud.storage.common.DeleteFileMessage;
-import com.example.cloud.storage.common.DownloadFileMessage;
+import com.example.cloud.storage.common.DeleteFile;
+import com.example.cloud.storage.common.DownloadFile;
 import com.example.cloud.storage.common.FileMessage;
 import com.example.cloud.storage.common.FilesRequest;
 import io.netty.channel.ChannelHandlerContext;
@@ -35,13 +35,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ctx.writeAndFlush(filesRequest);
         }
 
-        if(msg instanceof DeleteFileMessage){
-            DeleteFileMessage file = (DeleteFileMessage) msg;
+        if(msg instanceof DeleteFile){
+            DeleteFile file = (DeleteFile) msg;
             Files.delete(Paths.get(CLOUD_STORAGE,file.getFileName()));
         }
 
-        if(msg instanceof DownloadFileMessage){
-            DownloadFileMessage file = (DownloadFileMessage) msg;
+        if(msg instanceof DownloadFile){
+            DownloadFile file = (DownloadFile) msg;
             FileMessage fileMessage = new FileMessage(Paths.get(CLOUD_STORAGE, file.getFileName()));
             ctx.writeAndFlush(fileMessage);
         }
