@@ -6,6 +6,8 @@ import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
@@ -14,6 +16,12 @@ import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
+
+    @FXML
+    private TextField username;
+
+    @FXML
+    private TextField password;
 
     @FXML
     private ListView<String> listViewLocal;
@@ -94,6 +102,15 @@ public class Controller implements Initializable {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void userAuth(){
+        String login = username.getText().trim();
+        String pass = password.getText().trim();
+        if(!login.isEmpty() && !pass.isEmpty()){
+            System.out.println(login+"|"+pass);
+            Client.userAuth(login, pass);
         }
     }
 }

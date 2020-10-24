@@ -11,7 +11,7 @@
             <children>
                 <AnchorPane prefHeight="75.0" prefWidth="1000.0">
                     <children>
-                        <Button fx:id="btnSignIn" layoutX="869.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Sign In">
+                        <Button fx:id="btnSignIn" layoutX="869.0" layoutY="19.0" mnemonicParsing="false" onAction="#userAuth" prefHeight="25.0" prefWidth="117.0" text="Sign In">
                             <font>
                                 <Font size="14.0" />
                             </font>

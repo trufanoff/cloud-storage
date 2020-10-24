@@ -22,6 +22,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
         if(msg instanceof FileMessage){
             FileMessage fileMessage = (FileMessage)msg;
             path = Paths.get(CLOUD_STORAGE,fileMessage.getFileName());

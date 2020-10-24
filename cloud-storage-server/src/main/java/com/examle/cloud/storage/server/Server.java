@@ -34,7 +34,7 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(150*1024*1024, ClassResolvers.cacheDisabled(null)),new ServerHandler());
+                            socketChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(150*1024*1024, ClassResolvers.cacheDisabled(null)),new AuthHandler());
                         }
                     });
             //запуск прослушивания порта для подключения клиентов
