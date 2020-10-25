@@ -14,14 +14,14 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 public class Server {
     static final int PORT = 8189;
 
-    public void run() throws Exception{
+    public void run() throws Exception {
         //пулы потоков
         //обработка входящих подключений
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //для всей сетевой работы, обработки
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-        try{
+        try {
             //настройка работы сервера
             ServerBootstrap b = new ServerBootstrap();
             //указание пулов потоков для работы сервера
@@ -34,7 +34,11 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(150*1024*1024, ClassResolvers.cacheDisabled(null)),new AuthHandler());
+                            socketChannel.pipeline().addLast(
+                                    new ObjectEncoder(),
+                                    new ObjectDecoder(150 * 1024 * 1024, ClassResolvers.cacheDisabled(null)),
+                                    new ServerHandler()
+                            );
                         }
                     });
             //запуск прослушивания порта для подключения клиентов
@@ -43,7 +47,7 @@ public class Server {
 
             //ожидание завершения работы сервера
             f.channel().closeFuture().sync();
-        } finally{
+        } finally {
             //закрытие пулов потоков
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

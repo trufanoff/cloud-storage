@@ -1,12 +1,15 @@
 package com.example.cloud.storage.client;
 
+import com.example.cloud.storage.common.AuthResponse;
 import com.example.cloud.storage.common.FileMessage;
 import com.example.cloud.storage.common.FilesRequest;
-import javafx.collections.*;
-import javafx.event.ActionEvent;
-import javafx.fxml.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +19,12 @@ import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
+
+    @FXML
+    private Pane topPanel;
+
+    @FXML
+    private Pane mainPanel;
 
     @FXML
     private TextField username;
@@ -52,11 +61,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            refreshLocal();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mainPanel.setVisible(false);
         Client.startConnection();
     }
 
@@ -65,8 +70,7 @@ public class Controller implements Initializable {
         Client.sendFile(tempFile);
     }
 
-    //
-    public void refreshCloudFiles(ActionEvent actionEvent) {
+    public void refreshCloudFiles() {
         listCloud.clear();
         try {
             Client.refreshCloudFiles();
@@ -105,12 +109,16 @@ public class Controller implements Initializable {
         }
     }
 
-    public void userAuth(){
+    public void userAuth() throws IOException, ClassNotFoundException {
         String login = username.getText().trim();
         String pass = password.getText().trim();
         if(!login.isEmpty() && !pass.isEmpty()){
-            System.out.println(login+"|"+pass);
             Client.userAuth(login, pass);
+            AuthResponse response = (AuthResponse)Client.readObject();
+            if(response.isAuth()){
+                mainPanel.setVisible(true);
+                topPanel.setVisible(false);
+            }
         }
     }
 }
