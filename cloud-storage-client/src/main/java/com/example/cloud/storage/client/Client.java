@@ -18,9 +18,9 @@ public class Client {
     private static final String LOCAL_STORAGE = "cloud-storage-client/local-storage";
     private static Path path;
 
-    public static void startConnection(){
+    public static void startConnection() {
         try {
-            socket = new Socket("localhost",8189);
+            socket = new Socket("localhost", 8189);
             out = new ObjectEncoderOutputStream(socket.getOutputStream());
             in = new ObjectDecoderInputStream(socket.getInputStream());
         } catch (IOException e) {
@@ -28,7 +28,7 @@ public class Client {
         }
     }
 
-    public static void closeConnection(){
+    public static void closeConnection() {
         try {
             out.close();
         } catch (IOException e) {
@@ -46,8 +46,8 @@ public class Client {
         }
     }
 
-    public static void sendFile(String fileName){
-        path = Paths.get(LOCAL_STORAGE,fileName);
+    public static void sendFile(String fileName) {
+        path = Paths.get(LOCAL_STORAGE, fileName);
         try {
             out.writeObject(new FileMessage(path));
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class Client {
         return in.readObject();
     }
 
-    public static void refreshCloudFiles(){
+    public static void refreshCloudFiles() {
         try {
             out.writeObject(new FilesRequest());
         } catch (IOException e) {
@@ -67,7 +67,7 @@ public class Client {
         }
     }
 
-    public static void deleteFile(String fileName){
+    public static void deleteFile(String fileName) {
         try {
             out.writeObject(new DeleteFile(fileName));
         } catch (IOException e) {
@@ -75,7 +75,7 @@ public class Client {
         }
     }
 
-    public static void downloadFile(String fileName){
+    public static void downloadFile(String fileName) {
         try {
             out.writeObject(new DownloadFile(fileName));
         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class Client {
         }
     }
 
-    public static void userAuth(String userName, String password){
+    public static void userAuth(String userName, String password) {
         try {
             out.writeObject(new AuthRequest(userName, password));
         } catch (IOException e) {

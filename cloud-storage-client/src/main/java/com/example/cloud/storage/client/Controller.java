@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.*;
@@ -65,9 +66,10 @@ public class Controller implements Initializable {
         Client.startConnection();
     }
 
-    public void sendFile() throws IOException {
+    public void sendFile() {
         String tempFile = listLocal.get(listViewLocal.getSelectionModel().getSelectedIndex()).toString();
         Client.sendFile(tempFile);
+        refreshCloudFiles();
     }
 
     public void refreshCloudFiles() {
@@ -82,7 +84,7 @@ public class Controller implements Initializable {
         }
     }
 
-    public void deleteLocalFile(){
+    public void deleteLocalFile() {
         try {
             Files.delete(Paths.get(LOCAL_STORAGE, listLocal.get(listViewLocal.getSelectionModel().getSelectedIndex()).toString()));
             refreshLocal();
@@ -91,20 +93,20 @@ public class Controller implements Initializable {
         }
     }
 
-    public void deleteCloudFile(){
+    public void deleteCloudFile() {
         Client.deleteFile(listCloud.get(listViewCloud.getSelectionModel().getSelectedIndex()).toString());
+        refreshCloudFiles();
     }
 
-    public void downloadCloudFile(){
+    public void downloadCloudFile() {
         try {
             Client.downloadFile(listCloud.get(listViewCloud.getSelectionModel().getSelectedIndex()).toString());
-            FileMessage fileMessage = (FileMessage)Client.readObject();
-            Path path = Paths.get(LOCAL_STORAGE,fileMessage.getFileName());
+            FileMessage fileMessage = (FileMessage) Client.readObject();
+            Path path = Paths.get(LOCAL_STORAGE, fileMessage.getFileName());
             Files.createFile(path);
-            Files.write(path,fileMessage.getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            Files.write(path, fileMessage.getData());
+            refreshCloudFiles();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -112,14 +114,17 @@ public class Controller implements Initializable {
     public void userAuth() throws IOException, ClassNotFoundException {
         String login = username.getText().trim();
         String pass = password.getText().trim();
-        if(!login.isEmpty() && !pass.isEmpty()){
+        if (!login.isEmpty() && !pass.isEmpty()) {
             Client.userAuth(login, pass);
-            AuthResponse response = (AuthResponse)Client.readObject();
-            if(response.isAuth()){
+            AuthResponse response = (AuthResponse) Client.readObject();
+            if (response.isAuth()) {
                 mainPanel.setVisible(true);
                 topPanel.setVisible(false);
+                refreshLocal();
+                refreshCloudFiles();
             }
         }
+
     }
 }
 

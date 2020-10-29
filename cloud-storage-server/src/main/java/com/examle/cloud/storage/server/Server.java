@@ -10,9 +10,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Server {
-    static final int PORT = 8189;
+    private final Logger logger = LogManager.getLogger(Server.class);
+    private static final int PORT = 8189;
 
     public void run() throws Exception {
         //пулы потоков
@@ -43,10 +46,11 @@ public class Server {
                     });
             //запуск прослушивания порта для подключения клиентов
             ChannelFuture f = b.bind(PORT).sync();
-            System.out.println("Server started");
+            logger.info("Server started");
 
             //ожидание завершения работы сервера
             f.channel().closeFuture().sync();
+            logger.info("Server closed");
         } finally {
             //закрытие пулов потоков
             bossGroup.shutdownGracefully();
