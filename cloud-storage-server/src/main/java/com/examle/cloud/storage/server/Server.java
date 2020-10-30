@@ -10,18 +10,21 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Server {
-    static final int PORT = 8189;
+    private final Logger logger = LogManager.getLogger(Server.class);
+    private static final int PORT = 8189;
 
-    public void run() throws Exception{
+    public void run() throws Exception {
         //пулы потоков
         //обработка входящих подключений
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //для всей сетевой работы, обработки
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-        try{
+        try {
             //настройка работы сервера
             ServerBootstrap b = new ServerBootstrap();
             //указание пулов потоков для работы сервера
@@ -34,16 +37,21 @@ public class Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(150*1024*1024, ClassResolvers.cacheDisabled(null)),new ServerHandler());
+                            socketChannel.pipeline().addLast(
+                                    new ObjectEncoder(),
+                                    new ObjectDecoder(150 * 1024 * 1024, ClassResolvers.cacheDisabled(null)),
+                                    new ServerHandler()
+                            );
                         }
                     });
             //запуск прослушивания порта для подключения клиентов
             ChannelFuture f = b.bind(PORT).sync();
-            System.out.println("Server started");
+            logger.info("Server started");
 
             //ожидание завершения работы сервера
             f.channel().closeFuture().sync();
-        } finally{
+            logger.info("Server closed");
+        } finally {
             //закрытие пулов потоков
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

@@ -11,7 +11,6 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main.fxml"));
         primaryStage.setScene(new Scene(root, 1000, 600));
         primaryStage.setTitle("Cloud Storage Client");
-//        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
